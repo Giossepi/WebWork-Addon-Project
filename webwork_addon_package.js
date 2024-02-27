@@ -74,7 +74,7 @@ function test_func(string){
     console.log(string)
 }
 
-// TODO: This needs to be hooked up, i cant insert in the for loop though hmmm. (j/w)
+// This sort of works but now it randomly doesn't render correctly until you hit delete in the input box, strange (j/w)
 function debounce(func_to_call, delay) {
     let timer
     return function(...args) {
