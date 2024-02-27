@@ -23,7 +23,8 @@ function toggleBiggerClassAll(){
         }
     }
 }
-
+// I am thinking this should go back to rem as some of the parent containers are sized strangely
+// it also should change the z-index when active so always shows, after all that is why the user is making it bigger right? (j/w)
 function sizeChanger(direction){
     if(direction == "up" && new_width <= 95){
         new_width += 5
@@ -68,14 +69,19 @@ function validate_input(p_value){
     let v_value = p_value.replace("\\", "\\\\")
     return v_value
 }
+
+function test_func(string){
+    console.log(string)
+}
+
 // TODO: This needs to be hooked up, i cant insert in the for loop though hmmm. (j/w)
-function debounce(func_to_call) {
+function debounce(func_to_call, delay) {
     let timer
-    return function() {
+    return function(...args) {
         clearTimeout(timer)
         timer = setTimeout(() => {
-            func_to_call();
-        }, 10000)
+            func_to_call(...args);
+        }, delay)
     }
 }
 
@@ -90,21 +96,19 @@ function update_preview(p_value){
         if(v_value == ""){
             child.remove()
         }else{
-            // this needs to be validate way better, I want fraction bars! (j/w)
             // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
             child.textContent = "`" + v_value + "`"
-            // that gives a fraction bar, trying to figure that boi out (j/w)
-            // child.textContent = "$$\\frac{4}{3}$$" (j/w)
-            // another advanced example of formatted math
-            // child.textContent = "When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$" (j/w)
         }
     }
 }
 // iterate through the input boxes and attach event listeners that fire an anonymous function (j/w)
 // that listens to the input event (j/w)
 for(let input of answer_input){
+    const debounce_update = debounce(update_preview, 250)
     input.addEventListener("input", function(e){
-        update_preview(input.value)
+        // update_preview(input.value)
+        debounce_update(input.value)
+        console.log(input.value)
     })
 }
 // I should add a hotkey to insert things into the last clicked value box such as '(()()-()())/()^2' the pattern for the quotient rule (j/w)
