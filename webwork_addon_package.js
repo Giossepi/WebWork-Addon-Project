@@ -68,16 +68,6 @@ function validate_input(p_value){
     let v_value = p_value.replace("\\", "\\\\")
     return v_value
 }
-// TODO: This needs to be hooked up, i cant insert in the for loop though hmmm. (j/w)
-function debounce(func_to_call) {
-    let timer
-    return function() {
-        clearTimeout(timer)
-        timer = setTimeout(() => {
-            func_to_call();
-        }, 10000)
-    }
-}
 
 function update_preview(p_value){
     // check if a live-preview id exists (j/w)
@@ -93,10 +83,6 @@ function update_preview(p_value){
             // this needs to be validate way better, I want fraction bars! (j/w)
             // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
             child.textContent = "`" + v_value + "`"
-            // that gives a fraction bar, trying to figure that boi out (j/w)
-            // child.textContent = "$$\\frac{4}{3}$$" (j/w)
-            // another advanced example of formatted math
-            // child.textContent = "When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$" (j/w)
         }
     }
 }
