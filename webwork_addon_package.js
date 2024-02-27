@@ -125,4 +125,4 @@ document.addEventListener("click", function(e){
 })
 
 console.log("WebWork Addon Package Loaded! WAP is provided as is with no warranty or support, made by Windmann J")
-console.info("WAP Hotkeys: [ ~: Toggles all input boxes changing to new size ], [ |: Toggles the last clicked input box to the new size ], [ Page Up/Page Down: Adjusts the new size of the input boxes ]")
+console.info("WAP Hotkeys: [ ~: Toggles all input boxes changing to new size ], [ |: Toggles the last clicked input box to the new size ], [ Page Up/Page Down: Adjusts the new size of the input boxes ], [ PrtScn: Pastes '(()()-()())/()^2' into the last clicked input box ]")
