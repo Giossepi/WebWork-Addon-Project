@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "WebWork Addon Package (WAP)",
+  "version": "0.2.2",
+
+  "description": "Changes the size of WebWork answer boxes to a more usable size",
+
+  // "icons": {
+  //     "48": "icons/border-48.png"
+  //   },
+
+  "content_scripts": [
+    {
+      "matches": ["https://webwork2.math.montana.edu/webwork2/*"],
+      "js": ["webwork_addon_package.js"]
+    }
+  ]
+}
+  
