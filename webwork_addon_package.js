@@ -1,8 +1,9 @@
+// I have no idea if this is good practice (j/w)
 let answer_input = document.getElementsByClassName("codeshard")
 let stylesheet = document.styleSheets[0]
 let last_clicked = "init"
 let new_width = 50
-// add a black border to the bigger boxes so you know which ones are on and off
+// add a black border to the bigger boxes so you know which ones are on and off (j/w)
 stylesheet.insertRule(`.bigger { width: ${new_width}%; border: 1px solid black !important}`, 0);
 
 function toggleBiggerClassAll(){
@@ -54,7 +55,7 @@ function set_last_clicked_to_value(p_value){
 }
 
 function spawn_preview(value){
-    // ill need the position of the parent to position the live preview, whenever I get that working
+    // ill need the position of the parent to position the live preview, whenever I get that working (j/w)
     let parent = document.getElementById(last_clicked).parentElement
     let spawned_preview = document.getElementById("output_problem_body").appendChild(document.createElement("div"))
     spawned_preview.setAttribute("id", "live-preview")
@@ -63,11 +64,11 @@ function spawn_preview(value){
 }
 
 function validate_input(p_value){
-    // backslashes need to be replaced because of JS tomfoolery
+    // backslashes need to be replaced because of JS tomfoolery (j/w)
     let v_value = p_value.replace("\\", "\\\\")
     return v_value
 }
-// TODO: This needs to be hooked up, i cant insert in the for loop though hmmm.
+// TODO: This needs to be hooked up, i cant insert in the for loop though hmmm. (j/w)
 function debounce(func_to_call) {
     let timer
     return function() {
@@ -79,9 +80,9 @@ function debounce(func_to_call) {
 }
 
 function update_preview(p_value){
-    // check if a live-preview id exists
+    // check if a live-preview id exists (j/w)
     let child = document.getElementById("live-preview")
-    // validate / format the user input
+    // validate / format the user input (j/w)
     let v_value = validate_input(p_value)
     if(child == null){
         spawn_preview(v_value)
@@ -89,25 +90,26 @@ function update_preview(p_value){
         if(v_value == ""){
             child.remove()
         }else{
-            // this needs to be validate way better, I want fraction bars!
-            // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output)
+            // this needs to be validate way better, I want fraction bars! (j/w)
+            // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
             child.textContent = "`" + v_value + "`"
-            // that gives a fraction bar, trying to figure that boi out
-            // child.textContent = "$$\\frac{4}{3}$$"
-            // child.textContent = "When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$"
+            // that gives a fraction bar, trying to figure that boi out (j/w)
+            // child.textContent = "$$\\frac{4}{3}$$" (j/w)
+            // another advanced example of formatted math
+            // child.textContent = "When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$" (j/w)
         }
     }
 }
-// iterate through the input boxes and attach event listeners that fire an anonymous function
-// that listens to the input event
+// iterate through the input boxes and attach event listeners that fire an anonymous function (j/w)
+// that listens to the input event (j/w)
 for(let input of answer_input){
     input.addEventListener("input", function(e){
         update_preview(input.value)
     })
 }
-// I should add a hotkey to insert things into the last clicked value box such as '(()()-()())/()^2' the pattern for the quotient rule
-// To begin the above I switched from the keydown event to the keyup event, this does mean you CANNOT have a box selected when using a hotkey!
-// Spun out the keydown and key up listeners, not sure if that is a good idea
+// I should add a hotkey to insert things into the last clicked value box such as '(()()-()())/()^2' the pattern for the quotient rule (j/w)
+// To begin the above I switched from the keydown event to the keyup event, this does mean you CANNOT have a box selected when using a hotkey! (j/w)
+// Spun out the keydown and key up listeners, not sure if that is a good idea (j/w)
 document.addEventListener("keydown", function(e){
     if(e.key == "~"){
         e.preventDefault()
@@ -123,10 +125,10 @@ document.addEventListener("keydown", function(e){
         sizeChanger("down")
     }
 })
-// you cannot capture print screen on keydown
+// you cannot capture print screen on keydown (j/w)
 document.addEventListener("keyup", function(e){
     if(e.key == "PrintScreen"){
-        // TODO: THIS SHOULD OPEN A MENU WITH A FEW COMMON ONES, NOT JUST HARD CODED ONE
+        // TODO: THIS SHOULD OPEN A MENU WITH A FEW COMMON ONES, NOT JUST HARD CODED ONE (j/w)
         e.preventDefault()
         set_last_clicked_to_value("(()()-()())/()^2")
     }
