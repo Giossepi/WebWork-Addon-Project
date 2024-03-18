@@ -5,9 +5,9 @@
 
   "description": "Changes the size of WebWork answer boxes to a more usable size",
 
-  // "icons": {
-  //     "48": "icons/border-48.png"
-  //   },
+  "icons": {
+      "48": "icons/WAPLogo.jpg"
+    },
 
   "content_scripts": [
     {
