@@ -90,11 +90,32 @@ function update_preview(p_value){
         }
     }
 }
+
+function hide_preview(){
+    console.log("live preview hiding")
+    debounce(show_preview)()
+}
+
+function show_preview(){
+    console.log("live preview showing")
+}
+
+function debounce(callback) {
+    let timer
+    return function() {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            callback();
+        }, 1000)
+    }
+}
+
 // iterate through the input boxes and attach event listeners that fire an anonymous function (j/w)
 // that listens to the input event (j/w)
 for(let input of answer_input){
     input.addEventListener("input", function(e){
         update_preview(input.value)
+        hide_preview()
     })
 }
 // I should add a hotkey to insert things into the last clicked value box such as '(()()-()())/()^2' the pattern for the quotient rule (j/w)
