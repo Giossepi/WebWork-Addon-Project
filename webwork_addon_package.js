@@ -4,7 +4,12 @@ let stylesheet = document.styleSheets[0]
 let last_clicked = "init"
 let new_width = 30
 stylesheet.insertRule(`.bigger {width: ${new_width}rem; border: 1px solid black !important; z-index: 100000}`, 0);
-stylesheet.insertRule(`#live-preview {border: 2px solid red; padding: 5px}`, 1);
+stylesheet.insertRule(`#live-preview {
+    border: 2px solid red; 
+    border-radius: .5rem;
+    background-color: ghostwhite;
+    padding: 5px;
+    }`, 1);
 
 function toggle_bigger_class_all(){
     total_bigger = 0
