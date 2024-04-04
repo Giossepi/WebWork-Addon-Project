@@ -3,13 +3,17 @@ let answer_input = document.getElementsByClassName("codeshard")
 let stylesheet = document.styleSheets[0]
 let last_clicked = "init"
 let new_width = 30
+let preview_hidden = false
 stylesheet.insertRule(`.bigger {width: ${new_width}rem; border: 1px solid black !important; z-index: 100000}`, 0);
 stylesheet.insertRule(`#live-preview {
+    position: absolute;
     border: 2px solid red; 
     border-radius: .5rem;
     background-color: ghostwhite;
     padding: 5px;
     }`, 1);
+stylesheet.insertRule(`.obscured {filter: blur(1px) !important;}`, 2)
+stylesheet.insertRule(`.hover_position {translate: 0px 0px;}`, 3)
 
 function toggle_bigger_class_all(){
     total_bigger = 0
@@ -61,10 +65,29 @@ function set_last_clicked_to_value(p_value){
 
 function spawn_preview(value){
     // ill need the position of the parent to position the live preview, whenever I get that working (j/w)
-    let parent = document.getElementById(last_clicked).parentElement
-    let spawned_preview = document.getElementById("output_problem_body").appendChild(document.createElement("div"))
-    spawned_preview.setAttribute("id", "live-preview")
-    spawned_preview.textContent = "`" + value + "`"
+    let parent = document.getElementById("problem_body").parentElement
+    let parent_x = parent.getBoundingClientRect().x
+    let parent_y = parent.getBoundingClientRect().y
+
+    let input_x = document.getElementById(last_clicked).getBoundingClientRect().x
+    let input_y = document.getElementById(last_clicked).getBoundingClientRect().y
+
+    let input_length = document.getElementById(last_clicked).getBoundingClientRect().width + 50
+
+    let offset_x = (input_x - parent_x) + input_length
+    let offset_y = input_y - parent_y
+
+    let hover_style = `.hover_position {translate: ` + offset_x + `px ` + offset_y + `px;}`
+
+    stylesheet.deleteRule(3)
+    stylesheet.insertRule(hover_style, 3)
+
+    let preview_to_spawn = document.createElement("div")
+    preview_to_spawn.setAttribute("id", "live-preview")
+    preview_to_spawn.textContent = "`" + value + "`"
+    preview_to_spawn.classList.add("hover_position")
+    // document.getElementById("output_problem_body").appendChild(preview_to_spawn)
+    parent.appendChild(preview_to_spawn)
 }
 
 function validate_input(p_value){
@@ -92,12 +115,23 @@ function update_preview(p_value){
 }
 
 function hide_preview(){
-    console.log("live preview hiding")
-    debounce(show_preview)()
+    let child = document.getElementById("live-preview")
+    if(child != null){
+        if(!preview_hidden){
+            child.classList.add("obscured")
+            preview_hidden = true
+        }
+    }
 }
 
 function show_preview(){
-    console.log("live preview showing")
+    let child = document.getElementById("live-preview")
+    if(child != null){
+        if(preview_hidden){
+            child.classList.remove("obscured")
+            preview_hidden = false
+        }
+    }
 }
 
 function debounce(callback) {
@@ -106,16 +140,19 @@ function debounce(callback) {
         clearTimeout(timer)
         timer = setTimeout(() => {
             callback();
-        }, 1000)
+        }, 250)
     }
 }
 
+
+let timed_show = debounce(show_preview)
 // iterate through the input boxes and attach event listeners that fire an anonymous function (j/w)
 // that listens to the input event (j/w)
 for(let input of answer_input){
     input.addEventListener("input", function(e){
         update_preview(input.value)
         hide_preview()
+        timed_show()
     })
 }
 // I should add a hotkey to insert things into the last clicked value box such as '(()()-()())/()^2' the pattern for the quotient rule (j/w)
