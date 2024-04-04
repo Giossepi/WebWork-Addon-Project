@@ -13,6 +13,8 @@ stylesheet.insertRule(`#live-preview {
     padding: 5px;
     }`, 1);
 stylesheet.insertRule(`.obscured {filter: blur(1px) !important;}`, 2)
+// this is effectively a placeholder, we need to know where our hover_position rule will be to delete it
+// so we create this and insert at index 3 so we can delete it later and give it the real offsets (j/w)
 stylesheet.insertRule(`.hover_position {translate: 0px 0px;}`, 3)
 
 function toggle_bigger_class_all(){
@@ -63,25 +65,30 @@ function set_last_clicked_to_value(p_value){
     target.value = p_value
 }
 
-function spawn_preview(value){
-    // ill need the position of the parent to position the live preview, whenever I get that working (j/w)
+function update_preview_position(){
+    // all pages with a problem have a problem_body so we can use that as our attach target (j/w)
     let parent = document.getElementById("problem_body").parentElement
+    // get the offset of that target relative to the viewport (browser window) (j/w)
     let parent_x = parent.getBoundingClientRect().x
     let parent_y = parent.getBoundingClientRect().y
-
+    // we also need the relative position of the input box the user has targeted (j/w)
     let input_x = document.getElementById(last_clicked).getBoundingClientRect().x
     let input_y = document.getElementById(last_clicked).getBoundingClientRect().y
-
+    // finally offset where we spawn our live-preview by the width of the user targeted input plus 50 px for breathing room (j/w)
     let input_length = document.getElementById(last_clicked).getBoundingClientRect().width + 50
-
+    // compute the offset and save as vars for inserting into our css rule (j/w)
     let offset_x = (input_x - parent_x) + input_length
     let offset_y = input_y - parent_y
-
+    // create the new rule (j/w)
     let hover_style = `.hover_position {translate: ` + offset_x + `px ` + offset_y + `px;}`
-
+    // delete the rule and respawn it to ensure the new values are transferred (j/w)
     stylesheet.deleteRule(3)
     stylesheet.insertRule(hover_style, 3)
+}
 
+function spawn_preview(value){
+    let parent = document.getElementById("problem_body").parentElement
+    update_preview_position()
     let preview_to_spawn = document.createElement("div")
     preview_to_spawn.setAttribute("id", "live-preview")
     preview_to_spawn.textContent = "`" + value + "`"
@@ -107,6 +114,7 @@ function update_preview(p_value){
         if(v_value == ""){
             child.remove()
         }else{
+            update_preview_position()
             // this needs to be validate way better, I want fraction bars! (j/w)
             // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
             child.textContent = "`" + v_value + "`"
@@ -115,6 +123,7 @@ function update_preview(p_value){
 }
 
 function hide_preview(){
+    // hide and show preview can probably be one toggle function instead of two discreet functions (j/w)
     let child = document.getElementById("live-preview")
     if(child != null){
         if(!preview_hidden){
@@ -125,6 +134,7 @@ function hide_preview(){
 }
 
 function show_preview(){
+    // hide and show preview can probably be one toggle function instead of two discreet functions (j/w)
     let child = document.getElementById("live-preview")
     if(child != null){
         if(preview_hidden){
