@@ -18,7 +18,8 @@ stylesheet.insertRule(`.obscured {filter: blur(1px) !important;}`, 2)
 stylesheet.insertRule(`.hover_position {translate: 0px 0px;}`, 3)
 
 function toggle_bigger_class_all(){
-    total_bigger = 0
+    let child = document.getElementById("live-preview")
+    let total_bigger = 0
     for(let div of answer_input){
         if(div.className.includes("bigger")){
             total_bigger++
@@ -32,6 +33,9 @@ function toggle_bigger_class_all(){
         for(let div of answer_input){
             div.classList.remove("bigger")
         }
+    }
+    if(child != null){
+        update_preview_position()
     }
 }
 
@@ -47,8 +51,12 @@ function size_changer(direction){
 }
 
 function toggle_bigger_class_by_id(){
+    let child = document.getElementById("live-preview")
     let target = document.getElementById(last_clicked)
     target.classList.toggle("bigger")
+    if(child != null){
+        update_preview_position()
+    }
 }
 
 function set_last_clicked_to_id(e){
