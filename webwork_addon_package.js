@@ -155,7 +155,7 @@ function show_preview(){
 
 // TODO: This needs to also stop new previews from being spawned, hmmmm
 
-function enable_preview_preview(){
+function enable_preview(){
     this.preview_disabled = false
 }
 
