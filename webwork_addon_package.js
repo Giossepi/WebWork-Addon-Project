@@ -4,6 +4,7 @@ let stylesheet = document.styleSheets[0]
 let last_clicked = "init"
 let new_width = 30
 let preview_hidden = false
+let preview_disabled = false
 stylesheet.insertRule(`.bigger {width: ${new_width}rem; border: 1px solid black !important; z-index: 100000}`, 0);
 stylesheet.insertRule(`#live-preview {
     position: absolute;
@@ -152,6 +153,20 @@ function show_preview(){
     }
 }
 
+// TODO: This needs to also stop new previews from being spawned, hmmmm
+
+function enable_preview_preview(){
+    this.preview_disabled = false
+}
+
+function disable_preview(){
+    let child = document.getElementById("live-preview")
+    if(child != null){
+        child.remove()
+    }
+    this.preview_disabled = true
+}
+
 function debounce(callback) {
     let timer
     return function() {
@@ -189,6 +204,12 @@ document.addEventListener("keydown", function(e){
     }else if(e.key == "PageDown"){
         e.preventDefault()
         size_changer("down")
+    }else if(e.key == "End"){
+        e.preventDefault()
+        disable_preview()
+    }else if(e.key == "Home"){
+        e.preventDefault()
+        enable_preview()
     }
 })
 // you cannot capture print screen on keydown (j/w)
