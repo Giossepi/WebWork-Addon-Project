@@ -5,6 +5,7 @@ let last_clicked = "init"
 let new_width = 30
 let preview_hidden = false
 let preview_disabled = false
+let last_value = "init";
 stylesheet.insertRule(`.bigger {width: ${new_width}rem; border: 1px solid black !important; z-index: 100000}`, 0);
 stylesheet.insertRule(`#live-preview {
     position: absolute;
@@ -38,6 +39,20 @@ function toggle_bigger_class_all(){
     if(child != null){
         update_preview_position()
     }
+}
+// The following two functions are designed to allow someone to retrieve an answer if it was typed in but WW logged them out before submission (j/w)
+function update_saved_value(in_value){
+    this.last_value = in_value
+}
+
+function save_value(){
+    if(this.last_value != "init"){
+        localStorage.setItem("last_value", this.last_value)
+    }
+}
+
+function retrieve_last_value(){
+    console.log(localStorage.getItem("last_value"))
 }
 
 function size_changer(direction){
@@ -129,6 +144,8 @@ function update_preview(p_value){
             child.textContent = "`" + v_value + "`"
         }
     }
+    update_saved_value(v_value)
+    save_value()
 }
 
 function hide_preview(){
@@ -227,3 +244,6 @@ document.addEventListener("click", function(e){
 
 console.log("WebWork Addon Package Loaded! WAP is provided as is with no warranty or support, made by Windmann J")
 console.info("WAP Hotkeys: [ ~: Toggles all input boxes changing to new size ], [ |: Toggles the last clicked input box to the new size ], [ Page Up/Page Down: Adjusts the new size of the input boxes ], [ PrtScn: Pastes '(()()-()())/()^2' into the last clicked input box ]")
+
+console.log("\nLast value was:")
+retrieve_last_value()
