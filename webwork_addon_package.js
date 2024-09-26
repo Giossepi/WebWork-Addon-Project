@@ -5,7 +5,7 @@ let last_clicked = "init"
 let new_width = 30
 let preview_hidden = false
 let preview_disabled = false
-let last_value = "init";
+let last_value = "init"
 stylesheet.insertRule(`.bigger {width: ${new_width}rem; border: 1px solid black !important; z-index: 100000}`, 0);
 stylesheet.insertRule(`#live-preview {
     position: absolute;
@@ -117,7 +117,6 @@ function spawn_preview(value){
     preview_to_spawn.setAttribute("id", "live-preview")
     preview_to_spawn.textContent = "`" + value + "`"
     preview_to_spawn.classList.add("hover_position")
-    // document.getElementById("output_problem_body").appendChild(preview_to_spawn)
     parent.appendChild(preview_to_spawn)
 }
 
@@ -130,22 +129,24 @@ function validate_input(p_value){
 function update_preview(p_value){
     // check if a live-preview id exists (j/w)
     let child = document.getElementById("live-preview")
-    // validate / format the user input (j/w)
-    let v_value = validate_input(p_value)
-    if(child == null){
-        spawn_preview(v_value)
-    }else{
-        if(v_value == ""){
-            child.remove()
+    if(this.preview_disabled != true){
+        // validate / format the user input (j/w)
+        let v_value = validate_input(p_value)
+        if(child == null){
+            spawn_preview(v_value)
         }else{
-            update_preview_position()
-            // this needs to be validate way better, I want fraction bars! (j/w)
-            // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
-            child.textContent = "`" + v_value + "`"
+            if(v_value == ""){
+                child.remove()
+            }else{
+                update_preview_position()
+                // this needs to be validate way better, I want fraction bars! (j/w)
+                // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
+                child.textContent = "`" + v_value + "`"
+            }
         }
+        update_saved_value(v_value)
+        save_value()
     }
-    update_saved_value(v_value)
-    save_value()
 }
 
 function hide_preview(){
