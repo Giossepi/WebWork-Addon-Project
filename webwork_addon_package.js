@@ -249,6 +249,9 @@ for(let input of answer_input){
         hide_preview()
         timed_show()
     })
+    input.addEventListener("focus", function(e){
+        set_last_clicked_to_id(e)
+    })
     //TODO: This is making all of the input boxes be the first things tab applies to, need to make the preview and then submit buttons after (j/w)
     input.setAttribute("tabindex", "1")
 }
@@ -287,10 +290,6 @@ document.addEventListener("keyup", function(e){
         e.preventDefault()
         set_last_clicked_to_value("(()()-()())/()^2")
     }
-})
-
-document.addEventListener("click", function(e){
-    set_last_clicked_to_id(e)
 })
 
 console.log("WebWork Addon Package Loaded! WAP is provided as is with no warranty or support, made by Windmann J")
