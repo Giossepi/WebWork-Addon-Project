@@ -1,5 +1,7 @@
 // I have no idea if this is good practice (j/w)
 let answer_input = document.getElementsByClassName("codeshard")
+let preview_button = document.getElementById("previewAnswers_id")
+let answer_button = document.getElementById("submitAnswers_id")
 let stylesheet = document.styleSheets[0]
 let last_clicked = "init"
 let new_width = 30
@@ -11,13 +13,25 @@ stylesheet.insertRule(`#live-preview {
     position: absolute;
     border: 2px solid red; 
     border-radius: .5rem;
+    user-select: none;
     background-color: ghostwhite;
     padding: 5px;
-    }`, 1);
+    }`, 1)
 stylesheet.insertRule(`.obscured {filter: blur(1px) !important;}`, 2)
 // this is effectively a placeholder, we need to know where our hover_position rule will be to delete it
 // so we create this and insert at index 3 so we can delete it later and give it the real offsets (j/w)
 stylesheet.insertRule(`.hover_position {translate: 0px 0px;}`, 3)
+stylesheet.insertRule(`#live-preview:hover {cursor: pointer}`, 4)
+stylesheet.insertRule(`#wap-settings-button {
+    position: absolute;
+    border: 2px solid lightgreen; 
+    border-radius: .5rem;
+    user-select: none;
+    background-color: ghostwhite;
+    padding: 5px;
+    }`, 5)
+stylesheet.insertRule(`.pict_position {translate: 0px 0px;}`, 6)
+stylesheet.insertRule(`#wap-settings-button:hover {cursor: pointer}`, 7)
 
 function toggle_bigger_class_all(){
     let child = document.getElementById("live-preview")
@@ -110,6 +124,31 @@ function update_preview_position(){
     stylesheet.insertRule(hover_style, 3)
 }
 
+function spawn_settings_pict(){
+    let parent = document.getElementById("content")
+    let parent_x = parent.getBoundingClientRect().width
+    
+    let pict_to_spawn = document.createElement("div")
+    pict_to_spawn.setAttribute("id", "wap-settings-button")
+    pict_to_spawn.textContent = "Settings"
+    pict_to_spawn.addEventListener("click", function(e) {
+        enable_preview();
+    })
+    parent.prepend(pict_to_spawn)
+    let offset = parent_x - pict_to_spawn.getBoundingClientRect().width
+    let pict_pos = `.pict-position {translate: ` + offset + `px 0px;}`
+    stylesheet.deleteRule(6)
+    stylesheet.insertRule(pict_pos, 6)
+    pict_to_spawn.classList.add("pict-position")
+}
+
+function despawn_settings_pict(){
+    let target = document.getElementById("wap-settings-button")
+    if(target != null){
+        target.remove()
+    }
+}
+
 function spawn_preview(value){
     let parent = document.getElementById("problem_body").parentElement
     update_preview_position()
@@ -117,6 +156,9 @@ function spawn_preview(value){
     preview_to_spawn.setAttribute("id", "live-preview")
     preview_to_spawn.textContent = "`" + value + "`"
     preview_to_spawn.classList.add("hover_position")
+    preview_to_spawn.addEventListener("click", function(e) {
+        disable_preview();
+    })
     parent.appendChild(preview_to_spawn)
 }
 
@@ -175,6 +217,7 @@ function show_preview(){
 
 function enable_preview(){
     this.preview_disabled = false
+    despawn_settings_pict()
 }
 
 function disable_preview(){
@@ -183,6 +226,7 @@ function disable_preview(){
         child.remove()
     }
     this.preview_disabled = true
+    spawn_settings_pict()
 }
 
 function debounce(callback) {
@@ -205,7 +249,13 @@ for(let input of answer_input){
         hide_preview()
         timed_show()
     })
+    //TODO: This is making all of the input boxes be the first things tab applies to, need to make the preview and then submit buttons after (j/w)
+    input.setAttribute("tabindex", "1")
 }
+//TODO: This should make the preview button, then the answer button be the things you tab to after input boxes (j/w)
+// additionally now that these buttons have been picked out saving attempted answers is much easier
+preview_button.setAttribute("tabindex", "2")
+answer_button.setAttribute("tabindex", "3")
 // I should add a hotkey to insert things into the last clicked value box such as '(()()-()())/()^2' the pattern for the quotient rule (j/w)
 // To begin the above I switched from the keydown event to the keyup event, this does mean you CANNOT have a box selected when using a hotkey! (j/w)
 // Spun out the keydown and key up listeners, not sure if that is a good idea (j/w)
