@@ -1,7 +1,7 @@
 // I have no idea if this is good practice (j/w)
 let answer_input = document.getElementsByClassName("codeshard")
 let preview_button = document.getElementById("previewAnswers_id")
-let answer_button = document.getElementById("submitAnswers_id")
+let answer_button = (document.getElementById("submitAnswers_id") != null) ? document.getElementById("submitAnswers_id") : document.getElementById("checkAnswers_id")
 let stylesheet = document.styleSheets[0]
 let last_clicked = "init"
 let new_width = 30
