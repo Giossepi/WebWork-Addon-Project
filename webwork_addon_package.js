@@ -191,6 +191,8 @@ function update_preview(p_value){
     }
 }
 
+
+
 function hide_preview(){
     // hide and show preview can probably be one toggle function instead of two discreet functions (j/w)
     let child = document.getElementById("live-preview")
@@ -244,9 +246,11 @@ let timed_show = debounce(show_preview)
 // iterate through the input boxes and attach event listeners that fire an anonymous function (j/w)
 // that listens to the input event (j/w)
 for(let input of answer_input){
+    let debounced_update = debounce(() => update_preview(input.value)); //This is what I have contributed! I'm not sure totally what you want it to look like, but it now completely stops generating while the user is typing, and in my opinion works a bit better
+
     input.addEventListener("input", function(e){
-        update_preview(input.value)
-        hide_preview()
+        hide_preview()//stuck the hide preview before the debounded update, then left the time_show after which gives my new somewhat subtle changed effect, basically pauses the updates to the preview while inputing, then updated at once for a smoother effect
+        debounced_update()
         timed_show()
     })
     input.addEventListener("focus", function(e){
