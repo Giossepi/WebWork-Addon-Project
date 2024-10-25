@@ -174,10 +174,12 @@ function update_preview(p_value){
     if(this.preview_disabled != true){
         // validate / format the user input (j/w)
         let v_value = validate_input(p_value)
-        if(child == null){
+        // trimming the value and making sure the trimmed value is not an empty string prevents the empty LP from spawning (j/w)
+        if(child == null && v_value.trim() != ""){
             spawn_preview(v_value)
         }else{
-            if(v_value == ""){
+            // trimming the value and making sure the trimmed value is not an empty string prevents the empty LP from spawning (j/w)
+            if(v_value.trim() == ""){
                 child.remove()
             }else{
                 update_preview_position()
