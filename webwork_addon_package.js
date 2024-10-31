@@ -187,8 +187,11 @@ function update_preview(p_value){
                 child.remove()
             }else{
                 update_preview_position()
-                // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
-                child.textContent = "`" + v_value + "`"
+                // Again to prevent console errors before attempting to edit the child it must first exist. The repeat occurences of such checks does imply we should switch to a more standard format for verifying its existence (j/w)
+                if(child){
+                    // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
+                    child.textContent = "`" + v_value + "`"
+                }
             }
         }
         update_saved_value(v_value)
