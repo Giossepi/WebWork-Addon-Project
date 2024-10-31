@@ -54,7 +54,7 @@ function toggle_bigger_class_all(){
         update_preview_position()
     }
 }
-// The following two functions are designed to allow someone to retrieve an answer if it was typed in but WW logged them out before submission (j/w)
+// The following three functions are designed to allow someone to retrieve an answer if it was typed in but WW logged them out before submission (j/w)
 function update_saved_value(in_value){
     this.last_value = in_value
 }
@@ -88,7 +88,7 @@ function toggle_bigger_class_by_id(){
         update_preview_position()
     }
 }
-
+// TODO: The name of this function is derived from the old behavior of using a global click listener. we have since switched to a focus listener and as such the name needs to be changed (j/w)
 function set_last_clicked_to_id(e){
     let target_classes = e.target.className
     if(target_classes.includes("codeshard")){
@@ -123,6 +123,8 @@ function update_preview_position(){
     stylesheet.deleteRule(3)
     stylesheet.insertRule(hover_style, 3)
 }
+
+// TODO: the settings pictograph will eventually contain all user-editable settings and be an actual pictograph, currently it serves only as an on/off button (j/w)
 
 function spawn_settings_pict(){
     let parent = document.getElementById("content")
@@ -163,7 +165,7 @@ function spawn_preview(value){
 }
 
 function validate_input(p_value){
-    // backslashes need to be replaced because of JS tomfoolery (j/w)
+    // backslashes need to be replaced because of escape character stacking. Each layer of code requires the backslash (a common escape character) to itself be escaped. so our user types \, js sees that as \\ and so on.
     let v_value = p_value.replace("\\", "\\\\")
     return v_value
 }
@@ -179,11 +181,12 @@ function update_preview(p_value){
             spawn_preview(v_value)
         }else{
             // trimming the value and making sure the trimmed value is not an empty string prevents the empty LP from spawning (j/w)
-            if(v_value.trim() == ""){
+            // also now checks if the child exists to prevent a console error when it tries to remove null. 
+            // TODO: It may be worth having a more global state for child existence or to spin out child null checks to a separate function to consolidate repeat code (j/w)
+            if(v_value.trim() == "" && child != null){
                 child.remove()
             }else{
                 update_preview_position()
-                // this needs to be validate way better, I want fraction bars! (j/w)
                 // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
                 child.textContent = "`" + v_value + "`"
             }
@@ -215,8 +218,6 @@ function show_preview(){
     }
 }
 
-// TODO: This needs to also stop new previews from being spawned, hmmmm
-
 function enable_preview(){
     this.preview_disabled = false
     despawn_settings_pict()
@@ -244,7 +245,8 @@ function debounce(callback) {
 
 let timed_show = debounce(show_preview)
 // iterate through the input boxes and attach event listeners that fire an anonymous function (j/w)
-// that listens to the input event (j/w)
+// The input listener allows us to see whenever the value in an input box changes and then update the LP accordingly
+// the focus listener allows us to know which box was used last and supersedes the previous use of a global click listener
 for(let input of answer_input){
     input.addEventListener("input", function(e){
         update_preview(input.value)
@@ -254,10 +256,9 @@ for(let input of answer_input){
     input.addEventListener("focus", function(e){
         set_last_clicked_to_id(e)
     })
-    //TODO: This is making all of the input boxes be the first things tab applies to, need to make the preview and then submit buttons after (j/w)
     input.setAttribute("tabindex", "1")
 }
-//TODO: This should make the preview button, then the answer button be the things you tab to after input boxes (j/w)
+// This makes the preview button, then the answer button be the things you tab to after input boxes (j/w)
 // additionally now that these buttons have been picked out saving attempted answers is much easier
 preview_button.setAttribute("tabindex", "2")
 answer_button.setAttribute("tabindex", "3")
