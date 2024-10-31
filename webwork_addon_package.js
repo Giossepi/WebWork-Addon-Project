@@ -281,12 +281,6 @@ document.addEventListener("keydown", function(e){
     }else if(e.key == "PageDown"){
         e.preventDefault()
         size_changer("down")
-    }else if(e.key == "End"){
-        e.preventDefault()
-        disable_preview()
-    }else if(e.key == "Home"){
-        e.preventDefault()
-        enable_preview()
     }
 })
 // you cannot capture print screen on keydown (j/w)
