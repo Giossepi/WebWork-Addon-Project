@@ -1,5 +1,7 @@
 // I have no idea if this is good practice (j/w)
 let answer_input = document.getElementsByClassName("codeshard")
+// TODO: the line below allows us to grab both answer inputs and answer dropdowns, but it creates a few errors so this needs further troubleshooting (j/w)
+// let answer_input = document.querySelectorAll("codeshard,.pg-select");
 let preview_button = document.getElementById("previewAnswers_id")
 let answer_button = (document.getElementById("submitAnswers_id") != null) ? document.getElementById("submitAnswers_id") : document.getElementById("checkAnswers_id")
 let stylesheet = document.styleSheets[0]
@@ -164,9 +166,23 @@ function spawn_preview(value){
     parent.appendChild(preview_to_spawn)
 }
 
+function parenthesis_warning_test(v_value){
+    let open_paren_reg = /[\(*]/g
+    let close_paren_reg = /[\)*]/g
+    // use a ternary operator such that if any number of parenthesis exist we set the count of parenthesis based on that, if none exist we assign it a value of 0 (j/w)
+    let open_paren_count = (v_value.match(open_paren_reg) != null) ? v_value.match(open_paren_reg).length : 0
+    let close_paren_count = (v_value.match(close_paren_reg) != null) ? v_value.match(close_paren_reg).length : 0
+    if(open_paren_count != close_paren_count){
+        answer_button.style.backgroundImage = "linear-gradient(red, red)"
+    }else{
+        answer_button.style.backgroundImage = null
+    }
+}
+
 function validate_input(p_value){
     // backslashes need to be replaced because of escape character stacking. Each layer of code requires the backslash (a common escape character) to itself be escaped. so our user types \, js sees that as \\ and so on.
     let v_value = p_value.replace("\\", "\\\\")
+    parenthesis_warning_test(v_value)
     return v_value
 }
 
@@ -187,7 +203,7 @@ function update_preview(p_value){
                 child.remove()
             }else{
                 update_preview_position()
-                // Again to prevent console errors before attempting to edit the child it must first exist. The repeat occurences of such checks does imply we should switch to a more standard format for verifying its existence (j/w)
+                // Again to prevent console errors before attempting to edit the child it must first exist. The repeat occurrences of such checks does imply we should switch to a more standard format for verifying its existence (j/w)
                 if(child){
                     // huh, changing from $$ encapsulating to ` (backticks) gave me my fraction bars, neato (This changed to asciimath output) (j/w)
                     child.textContent = "`" + v_value + "`"
@@ -234,7 +250,8 @@ function disable_preview(){
     this.preview_disabled = true
     spawn_settings_pict()
 }
-
+// the debounce function accepts a function (the callback) you wish to time delay and resolves to that callback (thus is must be called still via func_name() )
+// additionally the timer set and clear makes it such that the function if called multiple times only fires once, hence the debounce name.
 function debounce(callback) {
     let timer
     return function() {
